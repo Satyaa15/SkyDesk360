@@ -1,4 +1,3 @@
-# SkyDesk360To help you showcase this project professionally on GitHub, I have created a comprehensive **README.md** file. It covers both the **FastAPI Backend** and **React Frontend**, including installation steps, tech stack, and the unique features we built.
 
 ### `README.md`
 
@@ -120,18 +119,3 @@ Upon initial startup, the system automatically generates a **Master Admin**:
 
 ---
 
-## 🎥 Video Assets
-
-The 1080x1920 office tour video should be placed at:
-`/public/videos/office-tour.mp4`
-
-```
-
-### Pro-Tips for your GitHub Repository:
-1.  **Screenshots**: Add a folder named `screenshots` and link them in the README. Visuals make people stay on your repo longer.
-2.  **License**: Consider adding an `MIT License` file if you want others to learn from it.
-3.  **Video**: If you have a screen recording of the parallax effect, upload it to YouTube and embed the link in the README.
-
-**Would you like me to help you write a `.gitignore` file so you don't accidentally upload your `node_modules` or `.env` files to GitHub?**
-
-```
