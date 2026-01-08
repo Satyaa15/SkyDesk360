@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI(title="SkyDesk360 API")
 
 # --------------------------------------------------
-# ENVIRONMENT VARIABLES (SECURE)
+# ENVIRONMENT VARIABLES
 # --------------------------------------------------
 MAIL_USERNAME = os.getenv("MAIL_USERNAME")
 MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
@@ -42,32 +42,36 @@ conf = ConnectionConfig(
 )
 
 async def send_skydesk_email(subject: str, recipient: str, body_content: str):
-    html = f"""
-    <html>
-        <body style="font-family: Arial; background:#f9f9f9; padding:20px">
-        <div style="max-width:600px;margin:auto;background:white;padding:30px;border-radius:12px">
-        <h2>SkyDesk360</h2>
-        <hr>{body_content}<hr>
-        <p style="font-size:10px;color:#aaa;text-align:center">
-        This is an automated message
-        </p>
-        </div>
-        </body>
-    </html>
-    """
+    try:
+        html = f"""
+        <html>
+            <body style="font-family: Arial; background:#f9f9f9; padding:20px">
+            <div style="max-width:600px;margin:auto;background:white;padding:30px;border-radius:12px">
+            <h2>SkyDesk360</h2>
+            <hr>{body_content}<hr>
+            <p style="font-size:10px;color:#aaa;text-align:center">
+            This is an automated message
+            </p>
+            </div>
+            </body>
+        </html>
+        """
 
-    message = MessageSchema(
-        subject=subject,
-        recipients=[recipient],
-        body=html,
-        subtype=MessageType.html
-    )
+        message = MessageSchema(
+            subject=subject,
+            recipients=[recipient],
+            body=html,
+            subtype=MessageType.html
+        )
 
-    fm = FastMail(conf)
-    await fm.send_message(message)
+        fm = FastMail(conf)
+        await fm.send_message(message)
+
+    except Exception as e:
+        logger.error(f"Email failed (ignored): {e}")
 
 # --------------------------------------------------
-# CORS – allow frontend & local dev
+# CORS
 # --------------------------------------------------
 app.add_middleware(
     CORSMiddleware,
@@ -87,7 +91,7 @@ app.add_middleware(
 models.Base.metadata.create_all(bind=database.engine)
 
 # --------------------------------------------------
-# CREATE MASTER ADMIN ON START
+# MASTER ADMIN
 # --------------------------------------------------
 @app.on_event("startup")
 def create_master_admin():
