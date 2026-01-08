@@ -3,29 +3,43 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from passlib.context import CryptContext
 import jwt
+import logging
 
 # Load .env file
 load_dotenv()
 
-# Password hashing
+# --- FIX FOR RENDER DEPLOYMENT ERROR ---
+# This suppresses the bcrypt version warning that often causes crashes on newer Python environments
+logging.getLogger("passlib").setLevel(logging.ERROR)
+
+# Password hashing configuration
+# Pinning the scheme to bcrypt only
 PWD_CONTEXT = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Read secrets from .env
 SECRET_KEY = os.getenv("SECRET_KEY")
-ALGORITHM = os.getenv("ALGORITHM", "HS256")  # default if not in .env
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
 
 if not SECRET_KEY:
-    raise ValueError("SECRET_KEY is not set in .env file")
+    # On Render, make sure you add SECRET_KEY in the "Environment Variables" section
+    raise ValueError("SECRET_KEY is not set in environment variables")
 
 # -------------------------------
 # Password functions
 # -------------------------------
 
 def get_password_hash(password: str) -> str:
+    # Ensure password is not exceeding 72 characters
+    if len(password) > 72:
+        password = password[:72]
     return PWD_CONTEXT.hash(password)
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return PWD_CONTEXT.verify(plain_password, hashed_password)
+    try:
+        return PWD_CONTEXT.verify(plain_password, hashed_password)
+    except Exception as e:
+        print(f"Password verification error: {e}")
+        return False
 
 # -------------------------------
 # JWT Token functions
