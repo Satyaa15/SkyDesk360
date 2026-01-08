@@ -77,8 +77,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        FRONTEND_URL,
-        "https://skydesk360.onrender.com"
+        "https://skydesk360.web.app",        # Firebase frontend
+        "https://skydesk360.onrender.com",  # Backend
     ],
     allow_credentials=True,
     allow_methods=["*"],
